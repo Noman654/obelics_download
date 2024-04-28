@@ -35,14 +35,20 @@ def get_args():
     parser.add_argument(
         "--path_warc_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/warc_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/warc_dataset/",
         help="Path of the dataset containing the warc files to retrieve the html.",
     )
     parser.add_argument(
         "--path_save_dir_web_document_dataset_without_images",
         type=str,
-        default="s3://m4-datasets/webdocs/web_document_dataset_without_images/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_without_images/",
         help="The directory to save the html dataset.",
+    )
+    parser.add_argument(
+        "--path_save_dir_image_urls_new_rules",
+        type=str,
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls_new_rules/",
+        help="The directory to save urls from new rules",
     )
     parser.add_argument(
         "--num_proc",
@@ -56,8 +62,8 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-
-    path_save_tmp_files = f"/raid/shahrukh/work/OBELICS/scratch/storage_hugo_{args.idx_job}/"
+    working_dir = os.getwd()
+    path_save_tmp_files = f"{working_dir}/scratch/storage_hugo_{args.idx_job}/"
     if os.path.exists(path_save_tmp_files):
         os.system(f"rm -r {path_save_tmp_files}")
     os.system(f"mkdir {path_save_tmp_files}")
@@ -140,7 +146,8 @@ if __name__ == "__main__":
     web_document_dataset_without_images = web_document_extractor.dataset
 
     web_document_extractor.get_image_urls()
-    path_sync_s3 = os.path.join("s3://llm-spark/shahrukh/commoncrawl/image_urls_new_rules/", str(args.idx_job), "image_urls.txt")
+    path_image_urls_new_rule = args.path_save_dir_image_urls_new_rules
+    path_sync_s3 = os.path.join(path_image_urls_new_rule, str(args.idx_job), "image_urls.txt")
     command_sync_s3 = f"aws s3 cp {path_save_file_image_urls} {path_sync_s3}"
     os.system(command_sync_s3)
     os.system(command_sync_s3)

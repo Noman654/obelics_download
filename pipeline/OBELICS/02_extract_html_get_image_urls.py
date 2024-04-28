@@ -34,19 +34,19 @@ def get_args():
     parser.add_argument(
         "--path_warc_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/warc_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/warc_dataset/",
         help="Path of the dataset containing the warc files to retrieve the html.",
     )
     parser.add_argument(
-        "--path_save_file_image_urls",
+        "--path_save_file_image_urls_s3",
         type=str,
-        default="/raid/shahrukh/work/OBELICS/scratch/storage_hugo/image_urls.txt",
+        default="s3://llm-spark/shahrukh/commoncrawl/image_urls/",
         help="The file to save the urls of all images.",
     )
     parser.add_argument(
         "--path_save_dir_html_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/html_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/html_dataset/",
         help="The directory to save the html dataset.",
     )
     parser.add_argument(
@@ -61,15 +61,17 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-
-    path_save_tmp_files = "/raid/shahrukh/work/OBELICS/scratch/storage_hugo/"
+    working_dir = os.getwd()
+    path_save_tmp_files = f"{working_dir}/scratch/storage_hugo/"
+    path_save_file_image_urls =  f"{working_dir}/scratch/storage_hugo/image_urls.txt"
+    logger.info("Path to store all the urls of Images: %s", path_save_file_image_urls)
     if os.path.exists(path_save_tmp_files):
         os.system(f"rm -r {path_save_tmp_files}")
     os.system(f"mkdir {path_save_tmp_files}")
 
     logger.info("Starting loading the warc or previous html dataset")
     path_sync_s3 = os.path.join(args.path_warc_dataset, str(args.idx_job))
-    path_save_disk_input = f"/raid/shahrukh/work/OBELICS/scratch/storage_hugo/warc_dataset_{args.idx_job}"
+    path_save_disk_input = f"{working}/scratch/storage_hugo/warc_dataset_{args.idx_job}"
     if os.path.exists(path_save_disk_input):
         os.system(f"rm -r {path_save_disk_input}")
     os.system(f"mkdir {path_save_disk_input}")
@@ -121,7 +123,7 @@ if __name__ == "__main__":
         pre_extraction_simplificator=pre_extraction_simplificator,
         path_save_dir_dataset=None,
         num_proc=args.num_proc,
-        path_save_file_image_urls=args.path_save_file_image_urls,
+        path_save_file_image_urls=path_save_file_image_urls,
         path_save_dir_downloaded_images=None,
         thread_count=None,
         number_sample_per_shard=None,
@@ -139,14 +141,15 @@ if __name__ == "__main__":
     html_dataset = web_document_extractor.dataset
 
     web_document_extractor.get_image_urls()
-    path_sync_s3 = os.path.join("s3://llm-spark/shahrukh/commoncrawl/image_urls/", str(args.idx_job), "image_urls.txt")
-    command_sync_s3 = f"aws s3 cp {args.path_save_file_image_urls} {path_sync_s3}"
+    path_save_file_image_urls_s3 = args.path_save_file_image_urls_s3
+    path_sync_s3 = os.path.join(path_save_file_image_urls_s3, str(args.idx_job), "image_urls.txt")
+    command_sync_s3 = f"aws s3 cp {path_save_file_image_urls} {path_sync_s3}"
     os.system(command_sync_s3)
     os.system(command_sync_s3)
     os.system(command_sync_s3)
 
     logger.info("Starting saving the html dataset")
-    path_save_disk_output = f"/raid/shahrukh/work/OBELICS/scratch/storage_hugo/html_dataset_{args.idx_job}"
+    path_save_disk_output = f"{workind_dir}/scratch/storage_hugo/html_dataset_{args.idx_job}"
     if os.path.exists(path_save_disk_output):
         os.system(f"rm -r {path_save_disk_output}")
     html_dataset.save_to_disk(path_save_disk_output)

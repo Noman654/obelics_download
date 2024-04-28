@@ -14,7 +14,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-root_path ="/raid/shahrukh/work/OBELICS"
+root_path = os.getwd()
 def get_args():
     parser = argparse.ArgumentParser(description="Download images and create a dataset containing them.")
     parser.add_argument(
@@ -37,7 +37,7 @@ def get_args():
     parser.add_argument(
         "--path_image_urls",
         type=str,
-        default="s3://m4-datasets/webdocs/image_urls_2/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls_2/",
         help="The path of the file containing the urls of all images.",
     )
     parser.add_argument(
@@ -88,13 +88,13 @@ def get_args():
     parser.add_argument(
         "--path_save_dir_dataset_images",
         type=str,
-        default="s3://m4-datasets/webdocs/image_dataset_2/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset_2/",
         help="The directory to save the dataset containing all images.",
     )
     parser.add_argument(
         "--path_save_file_map_url_idx",
         type=str,
-        default="s3://m4-datasets/webdocs/map_url_idx_2/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/map_url_idx_2/",
         help="The file to save the map to go from urls to indices of the dataset containing all images.",
     )
     args = parser.parse_args()

@@ -28,13 +28,13 @@ def get_args():
     parser.add_argument(
         "--path_metadata_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/pointers_cc_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/pointers_cc_dataset/",
         help="Path of the dataset containing the metadata to retrieve the warc files.",
     )
     parser.add_argument(
         "--path_save_dir_warc_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/warc_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/warc_dataset/",
         help="The directory to save the warc dataset.",
     )
     parser.add_argument(
@@ -49,28 +49,16 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-
-    path_save_tmp_files = "/raid/shahrukh/work/OBELICS/scratch/storage_hugo/"
+    working_dir = os.getwd()
+    path_save_tmp_files = f"{working_dir}/scratch/storage_hugo/"
     if os.path.exists(path_save_tmp_files):
         os.system(f"rm -r {path_save_tmp_files}")
     os.system(f"mkdir {path_save_tmp_files}")
 
     logger.info("Starting loading the metadata or previous warc dataset")
     path_sync_s3 = os.path.join(args.path_metadata_dataset, str(args.idx_job))
-    path_save_disk_input = "/raid/shahrukh/work/OBELICS/scratch/storage_hugo/pointers_cc_ds/"
+    path_save_disk_input = f"{working_dir}/scratch/storage_hugo/pointers_cc_ds/"
     os.system(f"mkdir {path_save_disk_input}")
-    # data = [{"url": "https://eppc.org/publication/declaration-of-disruption/", 
-    # "warc_filename": "shahrukh/commoncrawl/warc/CC-MAIN-20210303012222-20210303042222-00599.warc.gz",
-    #  "warc_record_offset": 250370303, "warc_record_length": 20061},
-    #  {"url": "https://talesofthetravelbug.wordpress.com/2016/02/26/abel-tasman-national-park/", 
-    #  "warc_filename": "shahrukh/commoncrawl/warc/CC-MAIN-20210303012222-20210303042222-00600.warc.gz", "warc_record_offset": 516800798, "warc_record_length": 29736}]
-    # df = pd.DataFrame(data)
-
-    # # Step 3: Convert DataFrame to Dataset
-    # dataset = Dataset.from_pandas(df)
-
-    # # Step 4: Save the Dataset to disk
-    # dataset.save_to_disk('/raid/shahrukh/work/OBELICS/scratch/storage_hugo/pointers_cc_ds/1')
     command_sync_s3 = f"aws s3 sync {path_sync_s3} {path_save_disk_input}"
     os.system(command_sync_s3)
     os.system(command_sync_s3)
@@ -80,7 +68,6 @@ if __name__ == "__main__":
         metadata_dataset = metadata_dataset.add_column("warc", [b""] * len(metadata_dataset))
         metadata_dataset = metadata_dataset.add_column("warc_error", [""] * len(metadata_dataset))
     logger.info("Finished loading the metadata or previous warc dataset")
-    #print(metadata_dataset['warc'])
     warc_downloader = WarcDownloader()
     logger.info("Starting downloading the warc files")
     warc_dataset = metadata_dataset.map(
@@ -94,11 +81,10 @@ if __name__ == "__main__":
             }
         ),
     )
-    print(warc_dataset['warc'])
     logger.info("Finished downloading the warc files")
 
     logger.info("Starting saving the warc dataset")
-    path_save_disk_output = "/raid/shahrukh/work/OBELICS/scratch/storage_hugo/warc_ds/"
+    path_save_disk_output = f"{working_dir}/scratch/storage_hugo/warc_ds/"
     warc_dataset.save_to_disk(path_save_disk_output)
     path_sync_s3 = os.path.join(args.path_save_dir_warc_dataset, str(args.idx_job))
     command_sync_s3 = f"aws s3 sync {path_save_disk_output} {path_sync_s3}"

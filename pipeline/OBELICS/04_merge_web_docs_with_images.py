@@ -22,7 +22,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-root_path ="/raid/shahrukh/work/OBELICS"
+root_path = os.getwd()
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -36,25 +36,25 @@ def get_args():
     parser.add_argument(
         "--path_web_document_dataset_without_images",
         type=str,
-        default="s3://m4-datasets/webdocs/web_document_dataset_without_images/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_without_images/",
         help="Path of the web document dataset without the images.",
     )
     parser.add_argument(
         "--path_image_dataset_1",
         type=str,
-        default="s3://m4-datasets/webdocs/image_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset/",
         help="Path of the dataset containing the images.",
     )
     parser.add_argument(
         "--path_image_dataset_2",
         type=str,
-        default="s3://m4-datasets/webdocs/image_dataset_2/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset_2/",
         help="Path of the second dataset containing the images.",
     )
     parser.add_argument(
         "--path_save_dir_web_document_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/web_document_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/",
         help="Path to save the web document dataset with the images.",
     )
     parser.add_argument(
