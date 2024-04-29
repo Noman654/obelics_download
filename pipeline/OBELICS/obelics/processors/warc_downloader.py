@@ -32,9 +32,10 @@ class WarcDownloader:
 
     def get_warc_from_metadata(self, client, warc_filename, warc_record_offset, warc_record_length):
         try:
+            print(warc_filename)
             response = client.get_object(
                 Bucket="llm-spark",
-                Key=warc_filename,
+                Key=f"shahrukh/{warc_filename}",
                 Range=f"bytes={warc_record_offset}-{warc_record_offset + warc_record_length - 1}",
             )
         except (ClientError, ProxyConnectionError) as e:

@@ -62,7 +62,7 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-    working_dir = os.getwd()
+    working_dir = os.getcwd()
     path_save_tmp_files = f"{working_dir}/scratch/storage_hugo_{args.idx_job}/"
     if os.path.exists(path_save_tmp_files):
         os.system(f"rm -r {path_save_tmp_files}")

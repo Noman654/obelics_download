@@ -22,7 +22,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-root_path = os.getwd()
+root_path = os.getcwd()
 
 def get_args():
     parser = argparse.ArgumentParser(

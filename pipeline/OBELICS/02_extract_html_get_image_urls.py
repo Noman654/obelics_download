@@ -40,7 +40,7 @@ def get_args():
     parser.add_argument(
         "--path_save_file_image_urls_s3",
         type=str,
-        default="s3://llm-spark/shahrukh/commoncrawl/image_urls/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls/",
         help="The file to save the urls of all images.",
     )
     parser.add_argument(
@@ -61,7 +61,7 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
-    working_dir = os.getwd()
+    working_dir = os.getcwd()
     path_save_tmp_files = f"{working_dir}/scratch/storage_hugo/"
     path_save_file_image_urls =  f"{working_dir}/scratch/storage_hugo/image_urls.txt"
     logger.info("Path to store all the urls of Images: %s", path_save_file_image_urls)
@@ -71,10 +71,12 @@ if __name__ == "__main__":
 
     logger.info("Starting loading the warc or previous html dataset")
     path_sync_s3 = os.path.join(args.path_warc_dataset, str(args.idx_job))
-    path_save_disk_input = f"{working}/scratch/storage_hugo/warc_dataset_{args.idx_job}"
+    path_save_disk_input = f"{working_dir}/scratch/storage_hugo/warc_dataset_{args.idx_job}"
     if os.path.exists(path_save_disk_input):
         os.system(f"rm -r {path_save_disk_input}")
     os.system(f"mkdir {path_save_disk_input}")
+    print(path_save_disk_input)
+    print(path_sync_s3)
     command_sync_s3 = f"aws s3 sync {path_sync_s3} {path_save_disk_input}"
     os.system(command_sync_s3)
     os.system(command_sync_s3)
@@ -149,7 +151,7 @@ if __name__ == "__main__":
     os.system(command_sync_s3)
 
     logger.info("Starting saving the html dataset")
-    path_save_disk_output = f"{workind_dir}/scratch/storage_hugo/html_dataset_{args.idx_job}"
+    path_save_disk_output = f"{working_dir}/scratch/storage_hugo/html_dataset_{args.idx_job}"
     if os.path.exists(path_save_disk_output):
         os.system(f"rm -r {path_save_disk_output}")
     html_dataset.save_to_disk(path_save_disk_output)
