@@ -12,7 +12,7 @@ from tqdm import tqdm
 PATH_S3_IMAGE_URLS_IN_WEBDOCS = "s3://llm-spark/shahrukh/commoncrawl/image_urls_in_web_document_dataset_filtered/"
 NUM_SHARDS = 4
 THRESHOLD_TOO_DUPLICATED = 10
-root_path = "/raid/shahrukh/work/OBELICS"
+root_path = os.getcwd()
 
 if __name__ == "__main__":
     path_save_disk_image_urls_in_webdocs = f"{root_path}/scratch/image_urls_in_webdocs"
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     command_sync_s3 = (
         f"aws s3 cp {root_path}/scratch/tot_image_urls_in_web_document_dataset_filtered.pickle"
         " s3://llm-spark/shahrukh/commoncrawl/tot_image_urls_in_web_document_dataset_filtered.pickle"
-    )
+     
     os.system(command_sync_s3)
     os.system(command_sync_s3)
     os.system(command_sync_s3)

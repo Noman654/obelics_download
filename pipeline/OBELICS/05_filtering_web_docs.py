@@ -23,7 +23,8 @@ from obelics.utils import (
 Image.MAX_IMAGE_PIXELS = None
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-root_path ="/raid/shahrukh/work/OBELICS"
+root_path = os.getcwd()
+root_dir = os.getcwd()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -43,13 +44,13 @@ def get_args():
     parser.add_argument(
         "--path_web_document_dataset",
         type=str,
-        default="s3://m4-datasets/webdocs/web_document_dataset/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/",
         help="Path of the dataset containing the web documents.",
     )
     parser.add_argument(
         "--path_save_web_document_dataset_filtered",
         type=str,
-        default="s3://m4-datasets/webdocs/web_document_dataset_filtered/",
+        default="s3://llm-spark/multi_modal/commoncrawlwebdocs/web_document_dataset_filtered/",
         help="The path to save the filtered web document dataset.",
     )
     parser.add_argument(
@@ -61,31 +62,31 @@ def get_args():
     parser.add_argument(
         "--path_config_filter_web_documents",
         type=str,
-        default="./m4/sourcing/data_collection/configs/config_filter_web_documents.yaml",
+        default=f"{root_dir}/obelics/configs/config_filter_web_documents.yaml",
         help="The path of the config file containing the filtering parameters.",
     )
     parser.add_argument(
         "--path_common_words",
         type=str,
-        default="/fsx/hugo/filtering_web_docs/models/common_words.json",
+        default=f"{root_dir}/models/common_words.json",
         help="The path of the dictionary containing the common words.",
     )
     parser.add_argument(
         "--path_lang_id_model",
         type=str,
-        default="/fsx/hugo/filtering_web_docs/models/lid.176.bin",
+        default=f"{root_dir}/models/lid.176.bin",
         help="The path of the lang id model (FastText).",
     )
     parser.add_argument(
         "--path_sentencepiece_model",
         type=str,
-        default="/fsx/hugo/filtering_web_docs/models/en.sp.model",
+        default=f"{root_dir}/models/en.sp.model",
         help="The path of the SentencePiece model.",
     )
     parser.add_argument(
         "--path_kenlm_model",
         type=str,
-        default="/fsx/hugo/filtering_web_docs/models/en.arpa.bin",
+        default=f"{root_dir}/models/en.arpa.bin",
         help="The path of the KenLM model.",
     )
     args = parser.parse_args()
@@ -165,6 +166,7 @@ if __name__ == "__main__":
         path_common_words=args.path_common_words,
         common_word_ratio_node_level_min_cutoff=filtering_params["common_word_ratio_node_level_min_cutoff"],
         cond_check_lang_id_node_level=filtering_params["cond_check_lang_id_node_level"],
+        target_lang_ids=filtering_params["target_lang_ids"],
         path_lang_id_model=args.path_lang_id_model,
         lang_id_node_level_min_cutoff=filtering_params["lang_id_node_level_min_cutoff"],
         cond_check_perplexity_score_node_level=filtering_params["cond_check_perplexity_score_node_level"],
@@ -210,6 +212,7 @@ if __name__ == "__main__":
         path_common_words=args.path_common_words,
         common_word_ratio_doc_level_min_cutoff=filtering_params["common_word_ratio_doc_level_min_cutoff"],
         cond_check_lang_id_doc_level=filtering_params["cond_check_lang_id_doc_level"],
+        target_lang_ids=filtering_params["target_lang_ids"],
         path_lang_id_model=args.path_lang_id_model,
         lang_id_doc_level_min_cutoff=filtering_params["lang_id_doc_level_min_cutoff"],
         cond_check_perplexity_score_doc_level=filtering_params["cond_check_perplexity_score_doc_level"],

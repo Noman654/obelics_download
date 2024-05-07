@@ -144,6 +144,7 @@ class FilteringFunctions:
             text=text, lower_case=True, strip_words=True, strip_characters=strip_characters
         )
         number_words = len(words)
+        #print(number_words, number_words_min_cutoff, number_words_max_cutoff)
         if (number_words < number_words_min_cutoff) or (number_words > number_words_max_cutoff):
             return False
         return True
@@ -242,6 +243,8 @@ class FilteringFunctions:
         stopword_ratio = FilteringFunctions.compute_stopword_ratio(
             text=text, strip_characters=strip_characters, stopwords=stopwords
         )
+        print(f"Original text: {text}")
+        print(stopword_ratio, stopword_ratio_min_cutoff)
         if stopword_ratio < stopword_ratio_min_cutoff:
             return False
         return True
@@ -318,6 +321,8 @@ class FilteringFunctions:
         words = FilteringFunctions.get_words_from_text(
             text=text, lower_case=True, strip_words=True, strip_characters=strip_characters
         )
+        #print(words)
+        #print(common_words)
         if not words:
             return 0
         common_word_ratio = len([word for word in words if word in common_words]) / len(words)
@@ -335,6 +340,7 @@ class FilteringFunctions:
             strip_characters=strip_characters,
             common_words=common_words,
         )
+        print(common_word_ratio, common_word_ratio_min_cutoff)
         if common_word_ratio < common_word_ratio_min_cutoff:
             return False
         return True
@@ -352,7 +358,8 @@ class FilteringFunctions:
         pred_lang_id, score_pred_lang_id = FilteringFunctions.compute_lang_id_pred_score(
             text=text, lang_id_model=lang_id_model
         )
-        if (pred_lang_id != target_lang_id) or (score_pred_lang_id < lang_id_min_cutoff):
+        print(f"text is {text} and detected lang is {pred_lang_id}")
+        if (pred_lang_id not in target_lang_id) or (score_pred_lang_id < lang_id_min_cutoff):
             return False
         return True
 
@@ -499,6 +506,7 @@ class WebDocumentFilteringNodeLevel:
         "common_words",
         "common_word_ratio_node_level_min_cutoff",
         "cond_check_lang_id_node_level",
+        "target_lang_ids",
         "path_lang_id_model",
         "lang_id_model",
         "lang_id_node_level_min_cutoff",
@@ -555,6 +563,7 @@ class WebDocumentFilteringNodeLevel:
         path_common_words,
         common_word_ratio_node_level_min_cutoff,
         cond_check_lang_id_node_level,
+        target_lang_ids,
         path_lang_id_model,
         lang_id_node_level_min_cutoff,
         cond_check_perplexity_score_node_level,
@@ -621,6 +630,7 @@ class WebDocumentFilteringNodeLevel:
         self.common_word_ratio_node_level_min_cutoff = common_word_ratio_node_level_min_cutoff
 
         self.cond_check_lang_id_node_level = cond_check_lang_id_node_level
+        self.target_lang_ids = target_lang_ids
         self.path_lang_id_model = path_lang_id_model
         if cond_check_lang_id_node_level:
             self.lang_id_model = fasttext.load_model(path_lang_id_model)
@@ -642,7 +652,8 @@ class WebDocumentFilteringNodeLevel:
         texts = web_document["texts"]
         images = web_document["images"]
         metadata = json.loads(web_document["metadata"])
-
+        print("################## Starting Text ######################")
+        print(texts)
         indices_to_remove = set()
 
         for ind, (text, image, meta) in enumerate(zip(texts, images, metadata)):
@@ -697,9 +708,10 @@ class WebDocumentFilteringNodeLevel:
 
                 paragraphs = text.split("\n\n")
                 paragraphs_indices_to_remove = set()
-
+                #print(paragraphs)
                 for ind_par, paragraph in enumerate(paragraphs):
-                    if paragraph == "END_OF_DOCUMENT_TOKEN_TO_BE_REPLACED":
+                    print(paragraphs_indices_to_remove)
+                    if paragraph == "<|endoftext|>":
                         continue
 
                     if self.cond_check_number_words_node_level:
@@ -710,6 +722,7 @@ class WebDocumentFilteringNodeLevel:
                             number_words_max_cutoff=self.number_words_node_level_max_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check number words")
                             continue
 
                     if self.cond_check_character_repetition_ratio_node_level:
@@ -719,6 +732,7 @@ class WebDocumentFilteringNodeLevel:
                             character_repetition_max_cutoff=self.character_repetition_node_level_max_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check character repetition ratio")
                             continue
 
                     if self.cond_check_word_repetition_ratio_node_level:
@@ -729,6 +743,7 @@ class WebDocumentFilteringNodeLevel:
                             word_repetition_max_cutoff=self.word_repetition_node_level_max_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check word repetition ratio")
                             continue
 
                     if self.cond_check_special_character_ratio_node_level:
@@ -738,6 +753,7 @@ class WebDocumentFilteringNodeLevel:
                             special_character_ratio_max_cutoff=self.special_character_ratio_node_level_max_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check special character ratio")
                             continue
 
                     if self.cond_check_stopword_ratio_node_level:
@@ -748,6 +764,7 @@ class WebDocumentFilteringNodeLevel:
                             stopword_ratio_min_cutoff=self.stopword_ratio_node_level_min_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check stopword ratio")
                             continue
 
                     if self.cond_check_flagged_word_ratio_node_level:
@@ -758,6 +775,7 @@ class WebDocumentFilteringNodeLevel:
                             flagged_word_ratio_max_cutoff=self.flagged_word_ratio_node_level_max_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check flagged word ratio")
                             continue
 
                     if self.cond_check_punctuation_ratio_node_level:
@@ -768,6 +786,7 @@ class WebDocumentFilteringNodeLevel:
                             min_nb_words=self.min_number_words_to_check_punctuation_ratio_node_level,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check punctuation ratio")
                             continue
 
                     if self.cond_check_common_word_ratio_node_level:
@@ -778,16 +797,18 @@ class WebDocumentFilteringNodeLevel:
                             common_word_ratio_min_cutoff=self.common_word_ratio_node_level_min_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check common word ratio")
                             continue
 
                     if self.cond_check_lang_id_node_level:
                         if not FilteringFunctions.check_lang_id(
                             text=paragraph,
                             lang_id_model=self.lang_id_model,
-                            target_lang_id="en",
+                            target_lang_id=self.target_lang_ids,
                             lang_id_min_cutoff=self.lang_id_node_level_min_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check lang id")
                             continue
 
                     if self.cond_check_perplexity_score_node_level:
@@ -801,11 +822,13 @@ class WebDocumentFilteringNodeLevel:
                             perplexity_score_max_cutoff=self.perplexity_score_node_level_max_cutoff,
                         ):
                             paragraphs_indices_to_remove.add(ind_par)
+                            print("check perplexity score")
                             continue
 
                 paragraphs = [
                     el for ind_par, el in enumerate(paragraphs) if ind_par not in paragraphs_indices_to_remove
                 ]
+                print(f"correct paragraphs:{paragraphs}")
                 if not paragraphs:
                     indices_to_remove.add(ind)
                 else:
@@ -817,7 +840,8 @@ class WebDocumentFilteringNodeLevel:
         web_document["texts"] = [el for ind, el in enumerate(texts) if ind not in indices_to_remove]
         web_document["images"] = [el for ind, el in enumerate(images) if ind not in indices_to_remove]
         web_document["metadata"] = json.dumps([el for ind, el in enumerate(metadata) if ind not in indices_to_remove])
-
+        print("########################################################## Web Document ######################")
+        print(web_document)
         return web_document
 
     # Needed to make multiprocessing work
@@ -866,6 +890,7 @@ class WebDocumentFilteringNodeLevel:
                 self.path_common_words,
                 self.common_word_ratio_node_level_min_cutoff,
                 self.cond_check_lang_id_node_level,
+                self.target_lang_ids,
                 self.path_lang_id_model,
                 self.lang_id_node_level_min_cutoff,
                 self.cond_check_perplexity_score_node_level,
@@ -909,6 +934,7 @@ class WebDocumentFilteringDocLevel:
         path_common_words,
         common_word_ratio_doc_level_min_cutoff,
         cond_check_lang_id_doc_level,
+        target_lang_ids,
         path_lang_id_model,
         lang_id_doc_level_min_cutoff,
         cond_check_perplexity_score_doc_level,
@@ -958,6 +984,7 @@ class WebDocumentFilteringDocLevel:
         self.common_word_ratio_doc_level_min_cutoff = common_word_ratio_doc_level_min_cutoff
 
         self.cond_check_lang_id_doc_level = cond_check_lang_id_doc_level
+        self.target_lang_ids = target_lang_ids
         self.path_lang_id_model = path_lang_id_model
         if cond_check_lang_id_doc_level:
             self.lang_id_model = fasttext.load_model(path_lang_id_model)
@@ -982,13 +1009,15 @@ class WebDocumentFilteringDocLevel:
 
         full_text = "\n\n".join([text for text in texts if text])
         all_images = [image for image in images if image]
-
+        print(f"Full text {full_text}")
+        print(f"All images {all_images}")
         if self.cond_check_number_images:
             if not FilteringFunctions.check_number_images(
                 number_images=len(all_images),
                 number_images_min_cutoff=self.number_images_min_cutoff,
                 number_images_max_cutoff=self.number_images_max_cutoff,
             ):
+                print("check number of images")
                 return False
 
         if self.cond_check_number_words_doc_level:
@@ -998,6 +1027,7 @@ class WebDocumentFilteringDocLevel:
                 number_words_min_cutoff=self.number_words_doc_level_min_cutoff,
                 number_words_max_cutoff=self.number_words_doc_level_max_cutoff,
             ):
+                print("number of word docs")
                 return False
 
         if self.cond_check_character_repetition_ratio_doc_level:
@@ -1006,6 +1036,7 @@ class WebDocumentFilteringDocLevel:
                 character_repetition_length=self.character_repetition_length_doc_level,
                 character_repetition_max_cutoff=self.character_repetition_doc_level_max_cutoff,
             ):
+                print("character repetition docs")
                 return False
 
         if self.cond_check_word_repetition_ratio_doc_level:
@@ -1015,6 +1046,7 @@ class WebDocumentFilteringDocLevel:
                 word_repetition_length=self.word_repetition_length_doc_level,
                 word_repetition_max_cutoff=self.word_repetition_doc_level_max_cutoff,
             ):
+                print("word repetition docs")
                 return False
 
         if self.cond_check_special_character_ratio_doc_level:
@@ -1023,6 +1055,7 @@ class WebDocumentFilteringDocLevel:
                 special_characters=self.strip_characters,
                 special_character_ratio_max_cutoff=self.special_character_ratio_doc_level_max_cutoff,
             ):
+                print("special character ratio")
                 return False
 
         if self.cond_check_stopword_ratio_doc_level:
@@ -1032,6 +1065,7 @@ class WebDocumentFilteringDocLevel:
                 stopwords=self.stopwords,
                 stopword_ratio_min_cutoff=self.stopword_ratio_doc_level_min_cutoff,
             ):
+                print("check stopwords")
                 return False
 
         if self.cond_check_flagged_word_ratio_doc_level:
@@ -1041,6 +1075,7 @@ class WebDocumentFilteringDocLevel:
                 flagged_words=self.flagged_words,
                 flagged_word_ratio_max_cutoff=self.flagged_word_ratio_doc_level_max_cutoff,
             ):
+                print("check flagged word ratio")
                 return False
 
         if self.cond_check_punctuation_ratio_doc_level:
@@ -1049,6 +1084,7 @@ class WebDocumentFilteringDocLevel:
                 punctuation=self.punctuation,
                 punctuation_ratio_min_cutoff=self.punctuation_ratio_doc_level_min_cutoff,
             ):
+                print("punctuation")
                 return False
 
         if self.cond_check_common_word_ratio_doc_level:
@@ -1058,15 +1094,17 @@ class WebDocumentFilteringDocLevel:
                 common_words=self.common_words,
                 common_word_ratio_min_cutoff=self.common_word_ratio_doc_level_min_cutoff,
             ):
+                print("common words")
                 return False
 
         if self.cond_check_lang_id_doc_level:
             if not FilteringFunctions.check_lang_id(
                 text=full_text,
                 lang_id_model=self.lang_id_model,
-                target_lang_id="en",
+                target_lang_id=self.target_lang_ids,
                 lang_id_min_cutoff=self.lang_id_doc_level_min_cutoff,
             ):
+                print("lang id")
                 return False
 
         if self.cond_check_perplexity_score_doc_level:
@@ -1079,6 +1117,7 @@ class WebDocumentFilteringDocLevel:
                 kenlm_model=self.kenlm_model,
                 perplexity_score_max_cutoff=self.perplexity_score_doc_level_max_cutoff,
             ):
+                print("perplexity")
                 return False
 
         return True
@@ -1116,6 +1155,7 @@ class WebDocumentFilteringDocLevel:
                 self.path_common_words,
                 self.common_word_ratio_doc_level_min_cutoff,
                 self.cond_check_lang_id_doc_level,
+                self.target_lang_ids,
                 self.path_lang_id_model,
                 self.lang_id_doc_level_min_cutoff,
                 self.cond_check_perplexity_score_doc_level,

@@ -17,7 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-root_path = "/raid/shahrukh/work/OBELICS"
+root_path = os.getcwd()
 def get_args():
     parser = argparse.ArgumentParser(description="Create the set of image urls in the web document dataset.")
     parser.add_argument(
@@ -28,13 +28,13 @@ def get_args():
     parser.add_argument(
         "--path_web_document_dataset_filtered",
         type=str,
-        default="s3://m4-datasets/webdocs/web_document_dataset_filtered/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/",
         help="Path of the web document dataset filtered.",
     )
     parser.add_argument(
         "--path_save_image_urls_in_web_document_dataset_filtered",
         type=str,
-        default="s3://m4-datasets/webdocs/image_urls_in_web_document_dataset_filtered/",
+        default="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls_in_web_document_dataset_filtered/",
         help="Path to save the image URLs in the web document dataset filtered.",
     )
     parser.add_argument(
