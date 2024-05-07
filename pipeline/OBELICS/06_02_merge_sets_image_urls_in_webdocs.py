@@ -9,8 +9,8 @@ from collections import Counter
 from tqdm import tqdm
 
 
-PATH_S3_IMAGE_URLS_IN_WEBDOCS = "s3://llm-spark/shahrukh/commoncrawl/image_urls_in_web_document_dataset_filtered/"
-NUM_SHARDS = 4
+PATH_S3_IMAGE_URLS_IN_WEBDOCS = "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls_in_web_document_dataset_filtered/"
+NUM_SHARDS = 7
 THRESHOLD_TOO_DUPLICATED = 10
 root_path = os.getcwd()
 
@@ -23,15 +23,19 @@ if __name__ == "__main__":
 
     all_counters = []
     for idx_shard in tqdm(range(NUM_SHARDS)):
-        with open(
-            os.path.join(
-                path_save_disk_image_urls_in_webdocs,
-                str(idx_shard),
-                "image_urls_in_web_document_dataset_filtered.pickle",
-            ),
-            "rb",
-        ) as f:
-            all_counters.append(pickle.load(f))
+        try:
+            with open(
+                os.path.join(
+                    path_save_disk_image_urls_in_webdocs,
+                    str(idx_shard),
+                    "image_urls_in_web_document_dataset_filtered.pickle",
+                ),
+                "rb",
+            ) as f:
+                all_counters.append(pickle.load(f))
+        except:
+            print(f"File not found for shard {idx_shard}")
+            
 
     tot_counter = Counter()
     for counter in tqdm(all_counters):
@@ -42,8 +46,8 @@ if __name__ == "__main__":
 
     command_sync_s3 = (
         f"aws s3 cp {root_path}/scratch/tot_image_urls_in_web_document_dataset_filtered.pickle"
-        " s3://llm-spark/shahrukh/commoncrawl/tot_image_urls_in_web_document_dataset_filtered.pickle"
-     
+        " s3://llm-spark/multi_modal/commoncrawl/webdocs/tot_image_urls_in_web_document_dataset_filtered.pickle"
+    )
     os.system(command_sync_s3)
     os.system(command_sync_s3)
     os.system(command_sync_s3)
@@ -57,7 +61,7 @@ if __name__ == "__main__":
 
     command_sync_s3 = (
         f"aws s3 cp {root_path}/scratch/tot_image_urls_in_web_document_dataset_filtered_too_duplicated.pickle"
-        " s3://llm-spark/shahrukh/commoncrawl/tot_image_urls_in_web_document_dataset_filtered_too_duplicated.pickle"
+        " s3://llm-spark/multi_modal/commoncrawl/webdocs/tot_image_urls_in_web_document_dataset_filtered_too_duplicated.pickle"
     )
     os.system(command_sync_s3)
     os.system(command_sync_s3)

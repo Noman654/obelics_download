@@ -16,9 +16,9 @@ Data pipeline based on OBELICS
 4. Merge Web Docs with Images
    - Execute following command with batch id and number of processes```python 04_merge_web_docs_with_images.py {batch_id} --path_web_document_dataset_without_images "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_without_images/" --path_image_dataset_1 "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset/" --path_image_dataset_2 "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset_2/" --path_save_dir_web_document_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" --num_proc {processes}```
 
-
-
-
+5. Command for web filtering
+   ```python 05_filtering_web_docs.py {batch_id} --path_web_document_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" --path_save_web_document_dataset_filtered "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" --path_config_filter_web_documents "./obelics/configs/config_filter_web_documents.yaml" --path_common_words "/mnt/weka/shahrukh/workspace/OBELICS/models/common_words.json" --path_lang_id_model "/mnt/weka/shahrukh/workspace/OBELICS/models/lid.176.bin"  --path_sentencepiece_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.sp.model" --path_kenlm_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.arpa.bin" --num_proc 2```
+   Different kind of filters applied are as follows
 ### Filtering
 1. Format check
    If format of the image is in (jpg, jpeg, png, webp)
@@ -30,5 +30,9 @@ Data pipeline based on OBELICS
 5. Remove non printing characters generated with following
    ```NON_PRINTING_CHARACTERS_RE = re.compile(f"[{''.join(map(chr, list(range(0,32)) + list(range(127,160))))}]")```
 6. Standardize whitespaces
+7. Language filter: Filter the text data based on target_lang_ids parameter in the config file
 
-7. 
+6. Execute following command to get set of image urls
+   ```python 06_01_create_set_image_urls_in_webdocs.py 0 --path_web_document_dataset_filtered "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" --path_save_image_urls_in_web_document_dataset_filtered "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls_in_web_document_dataset_filtered/" --num_proc 1```
+
+   ``````
