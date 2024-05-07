@@ -16,4 +16,19 @@ Data pipeline based on OBELICS
 4. Merge Web Docs with Images
    - Execute following command with batch id and number of processes```python 04_merge_web_docs_with_images.py {batch_id} --path_web_document_dataset_without_images "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_without_images/" --path_image_dataset_1 "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset/" --path_image_dataset_2 "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset_2/" --path_save_dir_web_document_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" --num_proc {processes}```
 
-5. 
+
+
+
+### Filtering
+1. Format check
+   If format of the image is in (jpg, jpeg, png, webp)
+2. Check image size
+   Check of minimum and maximum values of width, height, and aspect ratio of original and rendered image
+3. Check number of images
+   Filter the document if number of images in the document is more and less than max and min threshold values
+4. Remove enmpty words from the text data
+5. Remove non printing characters generated with following
+   ```NON_PRINTING_CHARACTERS_RE = re.compile(f"[{''.join(map(chr, list(range(0,32)) + list(range(127,160))))}]")```
+6. Standardize whitespaces
+
+7. 
