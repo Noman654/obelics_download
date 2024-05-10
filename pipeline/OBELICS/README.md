@@ -34,5 +34,7 @@ Data pipeline based on OBELICS
 
 6. Execute following command to get set of image urls
    ```python 06_01_create_set_image_urls_in_webdocs.py 0 --path_web_document_dataset_filtered "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" --path_save_image_urls_in_web_document_dataset_filtered "s3://llm-spark/multi_modal/commoncrawl/webdocs/image_urls_in_web_document_dataset_filtered/" --num_proc 1```
-
-   ``````
+    To merge al the images
+   ```python 06_02_merge_sets_image_urls_in_webdocs.py```
+7. Classify NSFW images
+   ```python 07_01_nsfw_image_filtering.py```
