@@ -20,25 +20,25 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-
+root_dir = os.getcwd()
 MAX_NUM_RETRIES_SYNC = 3
 
 IDX_JOB = sys.argv[1]
-PATH_SAVE_DISK_TMP_FILES = f"/scratch/storage_hugo_{IDX_JOB}/"
+PATH_SAVE_DISK_TMP_FILES = f"{root_dir}/scratch/storage_hugo_{IDX_JOB}/"
 
-PATH_DUP_URLS_S3 = "s3://m4-datasets/webdocs/dup_urls.json"
+PATH_DUP_URLS_S3 = "s3://llm-spark/multi_modal/commoncrawl/webdocs/dup_urls.json"
 PATH_DUP_URLS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "dup_urls.json")
 
-PATH_WEB_DOCS_S3 = f"s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered/{IDX_JOB}/"
+PATH_WEB_DOCS_S3 = f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered/{IDX_JOB}/"
 PATH_WEB_DOCS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs")
 
-NUM_PROC = 10
+NUM_PROC = 1 ## change this for multiprocessing
 
 PATH_SAVE_DISK_WEB_DOCS_URL_DEDUP = os.path.join(
     PATH_SAVE_DISK_TMP_FILES, "web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup"
 )
 PATH_SAVE_S3_WEB_DOCS_URL_DEDUP = os.path.join(
-    "s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup", str(IDX_JOB)
+    "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup", str(IDX_JOB)
 )
 
 

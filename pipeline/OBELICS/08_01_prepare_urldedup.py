@@ -72,20 +72,21 @@ if __name__ == "__main__":
     # We start from the result of the last operation which was done in multiple jobs
     # We need to merge the different dup_urls_to_warcfilename since we created one per job
     all_dup_urls_to_warcfilename = []
-    for idx_shard in tqdm(range(NUM_SHARDS)):
-        if idx_shard not in [4]:
-            with open(f"{root_dir}/trash/dup_urls_to_warcfilename/dup_urls_to_warcfilename_{idx_shard}.json") as f:
-                all_dup_urls_to_warcfilename.append(json.load(f))
-        dup_urls_to_warcfilename = {
-            url: unroll_list(
-                [
-                    all_dup_urls_to_warcfilename[idx_shard][url]
-                    for idx_shard in range(NUM_SHARDS)
-                    if url in all_dup_urls_to_warcfilename[idx_shard]
-                ]
-            )
-            for url in tqdm(dup_urls)
-        }
+    # for idx_shard in tqdm(range(NUM_SHARDS)):
+    #     all_dup_urls_to_warcfilename.
+    #     # if idx_shard not in [4]:
+        #     with open(f"{root_dir}/trash/dup_urls_to_warcfilename/dup_urls_to_warcfilename_{idx_shard}.json") as f:
+        #         all_dup_urls_to_warcfilename.append(json.load(f))
+    # dup_urls_to_warcfilename = {
+    #     url: unroll_list(
+    #         [
+    #             all_dup_urls_to_warcfilename[idx_shard][url]
+    #             for idx_shard in range(NUM_SHARDS)
+    #             if url in all_dup_urls_to_warcfilename[idx_shard]
+    #         ]
+    #     )
+    #     for url in tqdm(dup_urls)
+    # }
     print(len(dup_urls_to_warcfilename))  # Check
     print(sum([len(dup_urls_to_warcfilename[url]) for url in dup_urls_to_warcfilename]))  # Check
 
