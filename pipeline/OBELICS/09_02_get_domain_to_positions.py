@@ -36,19 +36,18 @@ def get_domain_to_positions():
     domain_to_positions = {}
 
     for idx_shard in tqdm(range(NUM_SHARDS)):
-        if idx_shard not in []:
-            path_subdataset = os.path.join(PATH_WEB_DOCS_LOCAL, str(idx_shard))
-            sub_ds = load_from_disk(path_subdataset)
-            metadata_sub_ds = sub_ds["general_metadata"]
-            domains = [urlparse(json.loads(meta)["url"]).netloc for meta in metadata_sub_ds]
-        
-            new_domain_to_pos = {}
-            for idx, domain in enumerate(domains):
-                new_domain_to_pos[domain] = new_domain_to_pos.get(domain, []) + [idx]
-            for domain in new_domain_to_pos:
-                if domain not in domain_to_positions:
-                    domain_to_positions[domain] = {}
-                domain_to_positions[domain][str(idx_shard)] = new_domain_to_pos[domain]
+        path_subdataset = os.path.join(PATH_WEB_DOCS_LOCAL, str(idx_shard))
+        sub_ds = load_from_disk(path_subdataset)
+        metadata_sub_ds = sub_ds["general_metadata"]
+        domains = [urlparse(json.loads(meta)["url"]).netloc for meta in metadata_sub_ds]
+    
+        new_domain_to_pos = {}
+        for idx, domain in enumerate(domains):
+            new_domain_to_pos[domain] = new_domain_to_pos.get(domain, []) + [idx]
+        for domain in new_domain_to_pos:
+            if domain not in domain_to_positions:
+                domain_to_positions[domain] = {}
+            domain_to_positions[domain][str(idx_shard)] = new_domain_to_pos[domain]
 
     return domain_to_positions
 

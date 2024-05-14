@@ -711,7 +711,7 @@ class WebDocumentFilteringNodeLevel:
                 #print(paragraphs)
                 for ind_par, paragraph in enumerate(paragraphs):
                     print(paragraphs_indices_to_remove)
-                    if paragraph == "<|endoftext|>":
+                    if paragraph == "END_OF_DOCUMENT_TOKEN_TO_BE_REPLACED":
                         continue
 
                     if self.cond_check_number_words_node_level:

@@ -23,21 +23,23 @@ logger.setLevel(logging.INFO)
 
 
 IDX_JOB = int(sys.argv[1])
-PATH_SAVE_DISK_TMP_FILES = f"/scratch/storage_hugo_{IDX_JOB}/"
+root_dir = os.getcwd()
+PATH_SAVE_DISK_TMP_FILES = f"{root_dir}/scratch/storage_hugo_{IDX_JOB}/"
 
-PATH_WEB_DOCS_LINE_DEDUP_TEXTS_ONLY_S3 = f"s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_linededup_texts_only/{IDX_JOB}"
+PATH_WEB_DOCS_LINE_DEDUP_TEXTS_ONLY_S3 = f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_linededup_texts_only/{IDX_JOB}"
 PATH_WEB_DOCS_LINE_DEDUP_TEXTS_ONLY_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs_linededup_texts_only")
 
 PATH_WEB_DOCS_S3 = (
-    f"s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup/{IDX_JOB}"
+    f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup/{IDX_JOB}"
 )
 PATH_WEB_DOCS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs")
 
 NUM_PROC = cpu_count()
+NUM_PROC = 2 # Change when running for more data
 
 PATH_SAVE_DISK_WEB_DOCS_LINE_DEDUP = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs_linededup")
 PATH_SAVE_S3_WEB_DOCS_LINE_DEDUP = (
-    f"s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_linededup/{IDX_JOB}"
+    f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_linededup/{IDX_JOB}"
 )
 
 

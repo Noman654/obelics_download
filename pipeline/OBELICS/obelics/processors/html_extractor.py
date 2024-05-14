@@ -23,6 +23,7 @@ class HtmlExtractor:
             # return example
 
         html, html_error = self.get_html_from_warc(warc=warc)
+        #print(html)
         example["html"] = html
         example["html_error"] = html_error
         return example

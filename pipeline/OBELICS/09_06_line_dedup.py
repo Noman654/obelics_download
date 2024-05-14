@@ -15,11 +15,11 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-
+root_dir = os.getcwd()
 IDX_JOB = sys.argv[1]
-PATH_SAVE_DISK_TMP_FILES = f"/scratch/storage_hugo_{IDX_JOB}/"
+PATH_SAVE_DISK_TMP_FILES = f"{root_dir}/scratch/storage_hugo_{IDX_JOB}/"
 
-PATH_DOMAIN_TO_DUPLICATED_TEXTS_S3 = "s3://m4-datasets/webdocs/new_line_dedup_domain_to_duplicated_texts.json"
+PATH_DOMAIN_TO_DUPLICATED_TEXTS_S3 = "s3://llm-spark/multi_modal/commoncrawl/webdocs/new_line_dedup_domain_to_duplicated_texts.json"
 PATH_DOMAIN_TO_DUPLICATED_TEXTS_LOCAL = os.path.join(
     PATH_SAVE_DISK_TMP_FILES, "new_line_dedup_domain_to_duplicated_texts.json"
 )
@@ -28,14 +28,14 @@ PATH_REDUCED_DOMAIN_TO_DUPLICATED_TEXTS_LOCAL = os.path.join(
 )
 
 PATH_WEB_DOCS_S3 = (
-    f"s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_texts_only/{IDX_JOB}/"
+    f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_texts_only/{IDX_JOB}/"
 )
 PATH_WEB_DOCS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs")
 
-NUM_PROC = 20
+NUM_PROC = 2
 
 PATH_SAVE_DISK_WEB_DOCS_LINE_DEDUP = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs_linededup")
-PATH_SAVE_S3_WEB_DOCS_LINE_DEDUP = f"s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_linededup_texts_only/{IDX_JOB}/"
+PATH_SAVE_S3_WEB_DOCS_LINE_DEDUP = f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_linededup_texts_only/{IDX_JOB}/"
 
 
 class LineDeduplication:

@@ -17,17 +17,19 @@ logger.setLevel(logging.INFO)
 
 
 NUM_SHARDS = 200
+NUM_SHARDS = 7
 
 IDX_JOB = int(sys.argv[1])
-PATH_SAVE_DISK_TMP_FILES = f"/scratch/storage_hugo_{IDX_JOB}/"
+root_dir = os.getcwd()
+PATH_SAVE_DISK_TMP_FILES = f"{root_dir}/scratch/storage_hugo_{IDX_JOB}/"
 
 PATH_WEB_DOCS_S3 = (
-    "s3://m4-datasets/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_texts_only/"
+    "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered_imgurldedup_nsfwfiltered_urldedup_texts_only/"
 )
 PATH_WEB_DOCS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs")
 
 PATH_LINE_DEDUP_DOMAIN_TO_POSITIONS_S3 = (
-    f"s3://m4-datasets/webdocs/line_dedup_domain_to_positions_sharded/{IDX_JOB}/line_dedup_domain_to_positions.json"
+    f"s3://llm-spark/multi_modal/commoncrawl/webdocs/line_dedup_domain_to_positions_sharded/{IDX_JOB}/line_dedup_domain_to_positions.json"
 )
 PATH_LINE_DEDUP_DOMAIN_TO_POSITIONS_LOCAL = os.path.join(
     PATH_SAVE_DISK_TMP_FILES, "line_dedup_domain_to_positions.json"
@@ -36,7 +38,7 @@ PATH_LINE_DEDUP_DOMAIN_TO_POSITIONS_LOCAL = os.path.join(
 PATH_SAVE_DISK_LINE_DEDUP_DOMAIN_TO_DUPLICATED_TEXTS = os.path.join(
     PATH_SAVE_DISK_TMP_FILES, "line_dedup_domain_to_duplicated_texts.json"
 )
-PATH_SAVE_S3_LINE_DEDUP_DOMAIN_TO_DUPLICATED_TEXTS = f"s3://m4-datasets/webdocs/line_dedup_domain_to_duplicated_texts_sharded/{IDX_JOB}/line_dedup_domain_to_duplicated_texts.json"
+PATH_SAVE_S3_LINE_DEDUP_DOMAIN_TO_DUPLICATED_TEXTS = f"s3://llm-spark/multi_modal/commoncrawl/webdocs/line_dedup_domain_to_duplicated_texts_sharded/{IDX_JOB}/line_dedup_domain_to_duplicated_texts.json"
 
 
 def get_domain_to_duplicated_texts(domain_to_positions):

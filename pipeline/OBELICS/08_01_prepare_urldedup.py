@@ -35,11 +35,11 @@ if __name__ == "__main__":
     os.system(command_sync_s3)
 
     ds_shards = [
-        load_from_disk(os.path.join(PATH_WEB_DOCS_LOCAL, str(idx_shard))) for idx_shard in tqdm(range(NUM_SHARDS)) if idx_shard not in [4]
+        load_from_disk(os.path.join(PATH_WEB_DOCS_LOCAL, str(idx_shard))) for idx_shard in tqdm(range(NUM_SHARDS))
     ]
     all_urls = []
     print(ds_shards)
-    for idx_shard in tqdm(range(NUM_SHARDS -1)):
+    for idx_shard in tqdm(range(NUM_SHARDS)):
         all_urls.extend([json.loads(meta)["url"] for meta in ds_shards[idx_shard]["general_metadata"]])
     print(f"Total number of documents: {len(all_urls)}")
     # Total number of documents: 361_209_568
@@ -60,14 +60,13 @@ if __name__ == "__main__":
     # and we will have to merge them after
     dup_urls_to_warcfilename = {}
     for idx_shard in tqdm(range(NUM_SHARDS)):
-        if idx_shard not in [4]:
-            ds_shard = load_from_disk(os.path.join(PATH_WEB_DOCS_LOCAL, str(idx_shard)), keep_in_memory=True)
-            urls_shard = [json.loads(meta)["url"] for meta in ds_shard["general_metadata"]]
-            for idx, url in enumerate(urls_shard):
-                if url in dup_urls:
-                    dup_urls_to_warcfilename[url] = dup_urls_to_warcfilename.get(url, []) + [
-                        json.loads(ds_shard[idx]["general_metadata"])["warc_filename"]
-                    ]
+        ds_shard = load_from_disk(os.path.join(PATH_WEB_DOCS_LOCAL, str(idx_shard)), keep_in_memory=True)
+        urls_shard = [json.loads(meta)["url"] for meta in ds_shard["general_metadata"]]
+        for idx, url in enumerate(urls_shard):
+            if url in dup_urls:
+                dup_urls_to_warcfilename[url] = dup_urls_to_warcfilename.get(url, []) + [
+                    json.loads(ds_shard[idx]["general_metadata"])["warc_filename"]
+                ]
     print(dup_urls_to_warcfilename)
     # We start from the result of the last operation which was done in multiple jobs
     # We need to merge the different dup_urls_to_warcfilename since we created one per job

@@ -21,7 +21,7 @@ character_repetition_node_level_max_cutoff: 0.1
 cond_check_word_repetition_ratio_node_level: True
 word_repetition_length_node_level: 5
 word_repetition_node_level_max_cutoff: 0.1
-cond_check_special_character_ratio_node_level: True
+cond_check_special_character_ratio_node_level: False
 special_character_ratio_node_level_max_cutoff: 0.3
 cond_check_stopword_ratio_node_level: False
 stopword_ratio_node_level_min_cutoff: 0.1
