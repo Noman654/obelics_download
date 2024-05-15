@@ -1,6 +1,7 @@
 # Data Pipeline Inspired by OBELICS
 - The pipeline is initially adopted from the Hugging Face [OBELICS](https://github.com/huggingface/OBELICS/tree/main) pipeline.
 - Following each step, the data is stored in S3.
+- Change the bucket name and key in [warc_downloader](https://github.com/ola-silicon/multimodal-data/blob/f6fff5563a4934dd462bcb9a1ac1fe345ae08995/pipeline/OBELICS/obelics/processors/warc_downloader.py#L37-L38)
 
 Note - Data gets exploded after each step
 ## Metadata Preparation Steps
