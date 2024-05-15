@@ -33,7 +33,7 @@ PATH_WEB_DOCS_S3 = f"s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document
 PATH_WEB_DOCS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_document_dataset_filtered_imgurldedup")
 
 NUM_PROC = cpu_count()
-NUM_PROC = 1
+NUM_PROC = 1 # Change it when running for more data
 PATH_SAVE_DISK_WEB_DOCS_NSFW_FILTERED = os.path.join(
     PATH_SAVE_DISK_TMP_FILES, "web_document_dataset_filtered_imgurldedup_nsfwfiltered"
 )
