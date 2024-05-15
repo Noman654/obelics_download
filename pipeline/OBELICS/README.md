@@ -1,12 +1,12 @@
-# Data pipeline based on OBELICS
-- Pipeline is originally borrowed from HuggingFace [OBELICS](https://github.com/huggingface/OBELICS/tree/main) pipeline
-- Data is being stored in s3 after every step
+# Data Pipeline Inspired by OBELICS
+- The pipeline is initially adopted from the Hugging Face [OBELICS](https://github.com/huggingface/OBELICS/tree/main) pipeline.
+- Following each step, the data is stored in S3.
 
 Note - Data gets exploded after each step
-### Metadata Preparation Steps
-- In order to process the data parallely, we need to split the index data into multiple batches.
-- Each batch need to be stored as huggingface dataset in s3 location `s3://llm-spark/multi_modal/commoncrawl/webdocs/dataset/{batch_id}/ (this is a example location)`
-- Structure of the metadata should be as follows 
+## Metadata Preparation Steps
+
+- To enable parallel data processing, we must partition the CC index data into numerous batches. Each batch should be saved as a Hugging Face dataset in an S3 location such as `s3://llm-spark/multi_modal/commoncrawl/webdocs/dataset/{batch_id}/ (this is an illustrative location)`.
+- The metadata structure should adhere to the following format: 
 ```json
 {
  'url': 'https://www.herzindagi.com/hindi/advice/these-6-types-of-fashionable-footwear-will-damage-your-feet-ankles-and-knees-article-92503',
@@ -19,7 +19,7 @@ Note - Data gets exploded after each step
 ```
 - Fields `url`, `warc_record_offset`, `warc_record_length` and `warc_filename` are mandatory.
 
-### Data Extraction Steps
+## Data Extraction Steps
 
 ### Steps to run the OBELICS Pipeline
 
