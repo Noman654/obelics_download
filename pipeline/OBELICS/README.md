@@ -96,38 +96,38 @@ Note - Data gets exploded after each step
 
 9. Get the text only data from documents 
    
-   9.1 Get the texts only from web documents from [09_01_create_web_docs_texts_only.py](./09_01_create_web_docs_texts_only.py). Execute below command with `batch_id`
+      9.1 Get the texts only from web documents from [09_01_create_web_docs_texts_only.py](./09_01_create_web_docs_texts_only.py). Execute below command with `batch_id`
 
-   ```bash
-   python 09_01_create_web_docs_texts_only.py {batch_id}
-   ```
+      ```bash
+      python 09_01_create_web_docs_texts_only.py {batch_id}
+      ```
 
-   9.2 Get the domain to position details. User is required to change the `NUM_SHARDS = 200` value
-   ```bash
-   python 09_02_get_domain_to_positions.py
-   ```
+      9.2 Get the domain to position details. User is required to change the `NUM_SHARDS = 200` value
+      ```bash
+      python 09_02_get_domain_to_positions.py
+      ```
 
-   9.3 Get line splited data to dedup at line level. User is required to change the `NUM_SHARDS = 200` value
-   ```bash
-   python 09_03_split_domain_to_positions.py
-   ```
+      9.3 Get line splited data to dedup at line level. User is required to change the `NUM_SHARDS = 200` value
+      ```bash
+      python 09_03_split_domain_to_positions.py
+      ```
 
-   9.4 Check line level duplication of data in all the documents.  User is required to change the `NUM_SHARDS = 200` value
-   ```bash
-   python 09_04_get_domain_to_duplicated_texts.py {batch_id}
-   ```
-   9.5 Merge all the duplicated texts into one file. User is required to change the `NUM_SHARDS = 200` value
-   ```bash
-   python 09_05_merge_domain_to_duplicated_texts_sharded.py
-   ```
-   9.6 Remove the duplicated texts from the data. 
-   ```bash
-      python 09_06_line_dedup.py {batch_id}
-   ```
-   9.7 merge the data back to one file
-   ```bash
-      python 09_07_merge_web_docs_texts_only_and_rest.py {batch_id}
-   ```
+      9.4 Check line level duplication of data in all the documents.  User is required to change the `NUM_SHARDS = 200` value
+      ```bash
+      python 09_04_get_domain_to_duplicated_texts.py {batch_id}
+      ```
+      9.5 Merge all the duplicated texts into one file. User is required to change the `NUM_SHARDS = 200` value
+      ```bash
+      python 09_05_merge_domain_to_duplicated_texts_sharded.py
+      ```
+      9.6 Remove the duplicated texts from the data. 
+      ```bash
+         python 09_06_line_dedup.py {batch_id}
+      ```
+      9.7 merge the data back to one file
+      ```bash
+         python 09_07_merge_web_docs_texts_only_and_rest.py {batch_id}
+      ```
 
 10. Batchwise cleaning of data if there are case in the final data that are not expected  
    ```bash
@@ -135,26 +135,26 @@ Note - Data gets exploded after each step
    ```
 
 11. Remove url and image set duplicates
-   11.1 Create a set of urls and image 
-   ```bash
-   python 11_01_create_set_img_urls.py {batch_id}
-   ```
-   11.2 Get the documents to remove where image and url set duplicates are there. User need to change  `NUM_SHARDS = 200` value
-   ```bash
-   python 11_02_get_docs_to_remove_by_set_img_urls_dedup.py {batch_id}
-   ```
-   11.3 Remove unwanted documents 
-   ```bash
-   python 11_03_set_img_urls_dedup.py {batch_id}
-   ```
+      11.1 Create a set of urls and image 
+      ```bash
+      python 11_01_create_set_img_urls.py {batch_id}
+      ```
+      11.2 Get the documents to remove where image and url set duplicates are there. User need to change  `NUM_SHARDS = 200` value
+      ```bash
+      python 11_02_get_docs_to_remove_by_set_img_urls_dedup.py {batch_id}
+      ```
+      11.3 Remove unwanted documents 
+      ```bash
+      python 11_03_set_img_urls_dedup.py {batch_id}
+      ```
 12. Find out images that are not authorized to be used for training using spawning api
-   12.1  User spawning API to get images that can not be used in training 
-   ```bash
-   python 12_01_find_opt_out_images.py
-   ```
-   12.2 Remove the images that are not authorized to be used for training
-   ```bash
-   python 12_02_remove_opt_out_images.py {batch_id}
+      12.1  User spawning API to get images that can not be used in training 
+      ```bash
+      python 12_01_find_opt_out_images.py
+      ```
+      12.2 Remove the images that are not authorized to be used for training
+      ```bash
+      python 12_02_remove_opt_out_images.py {batch_id}
    ```
 13. Final processing 
    - Remove end of the document token 
@@ -162,7 +162,7 @@ Note - Data gets exploded after each step
    ```bash
    python 13_final_processing.py
    ```
-   
+
    
    
 
