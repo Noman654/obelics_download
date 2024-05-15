@@ -62,7 +62,15 @@ Note - Data gets exploded after each step
 5. Command for web filtering
    
    ```bash
-   python 05_filtering_web_docs.py {batch_id} /--path_web_document_dataset   "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" / --path_save_web_document_dataset_filtered  "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" / --path_config_filter_web_documents  "./obelics/configs/config_filter_web_documents.yaml" / --path_common_words "/mnt/weka/shahrukh/workspace/OBELICS/models/common_words.json" / --path_lang_id_model "/mnt/weka/shahrukh/workspace/OBELICS/models/lid.176.bin" /   --path_sentencepiece_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.sp.model" / --path_kenlm_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.arpa.bin" / --num_proc 2
+   python 05_filtering_web_docs.py {batch_id} 
+   --path_web_document_dataset   "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" 
+   --path_save_web_document_dataset_filtered  "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" 
+   --path_config_filter_web_documents  "./obelics/configs/config_filter_web_documents.yaml"  
+   --path_common_words "/mnt/weka/shahrukh/workspace/OBELICS/models/common_words.json"  
+   --path_lang_id_model "/mnt/weka/shahrukh/workspace/OBELICS/models/lid.176.bin"   
+   --path_sentencepiece_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.sp.model" 
+   --path_kenlm_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.arpa.bin"  
+   --num_proc 2
    ```
    
    Different kind of filters applied are as follows
