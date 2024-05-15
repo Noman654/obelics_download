@@ -2,6 +2,8 @@
 - The pipeline is initially adopted from the Hugging Face [OBELICS](https://github.com/huggingface/OBELICS/tree/main) pipeline.
 - Following each step, the data is stored in S3.
 - Change the bucket name and key in [warc_downloader](https://github.com/ola-silicon/multimodal-data/blob/f6fff5563a4934dd462bcb9a1ac1fe345ae08995/pipeline/OBELICS/obelics/processors/warc_downloader.py#L37-L38)
+- In most of the scripts s3 locations are hardcoded with prefix `s3://llm-spark/` as it was hardcoded in original pipeline
+- We are giving all the scripts that were used for the creation of OBELICS, with numbers indicating the chronology.
 
 Note - Data gets exploded after each step
 ## Metadata Preparation Steps
@@ -19,6 +21,7 @@ Note - Data gets exploded after each step
  }
 ```
 - Fields `url`, `warc_record_offset`, `warc_record_length` and `warc_filename` are mandatory.
+- `batch_id` should be sequntial starting from 0
 
 ## Data Extraction Steps
 
@@ -61,6 +64,7 @@ Note - Data gets exploded after each step
    ```
 
 5. Command for web filtering
+   - Web filtering is driven by the [config](pipeline/OBELICS/obelics/configs/config_filter_web_documents.yaml). There are some differences in the configuration from [original config](https://github.com/huggingface/OBELICS/blob/main/obelics/configs/config_filter_web_documents.yaml)
    
    ```bash
    python 05_filtering_web_docs.py {batch_id} 
