@@ -13,7 +13,9 @@ Note - Data gets exploded after each step
    - Execute following command for [01_download_warc.py](./01_download_warc.py) with batch id and number of processes 
 
    ```bash 
-   python 01_download_warc.py {batch_id} --path_metadata_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/dataset/" --path_save_dir_warc_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/warc_dataset/" --num_proc {number of processes}
+   python 01_download_warc.py {batch_id} --path_metadata_dataset
+    "s3://llm-spark/multi_modal/commoncrawl/webdocs/dataset/" --path_save_dir_warc_dataset 
+    "s3://llm-spark/multi_modal/commoncrawl/webdocs/warc_dataset/" --num_proc {number of processes}
    ```
   
 2. Extract html page and get image urls
