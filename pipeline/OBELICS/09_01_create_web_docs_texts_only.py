@@ -24,7 +24,7 @@ PATH_WEB_DOCS_S3 = (
 PATH_WEB_DOCS_LOCAL = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs")
 
 NUM_PROC = cpu_count()
-NUM_PROC = 1 ## Change when running for bulk
+NUM_PROC = 1 ## @TODO: SRK: Change when running for bulk
 
 PATH_SAVE_DISK_WEB_DOCS_TEXTS_ONLY = os.path.join(PATH_SAVE_DISK_TMP_FILES, "web_docs_texts_only")
 PATH_SAVE_S3_WEB_DOCS_TEXTS_ONLY = (

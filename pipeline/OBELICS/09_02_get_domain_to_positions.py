@@ -18,7 +18,7 @@ logger.setLevel(logging.INFO)
 root_dir = os.getcwd()
 
 NUM_SHARDS = 200
-NUM_SHARDS = 7 # Change it when running for more data
+NUM_SHARDS = 7 #  @TODO SRK: Change it when running for more data
 PATH_SAVE_DISK_TMP_FILES = f"{root_dir}/scratch/storage_hugo/"
 
 PATH_WEB_DOCS_S3 = (

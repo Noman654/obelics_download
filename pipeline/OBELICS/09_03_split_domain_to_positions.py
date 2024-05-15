@@ -8,7 +8,7 @@ from tqdm import tqdm
 random.seed(42)
 
 NUM_SHARDS = 200
-NUM_SHARDS = 7
+NUM_SHARDS = 7  # @TODO :SRK Change when running with more data
 root_dir = os.getcwd()
 
 PATH_LINE_DEDUP_DOMAIN_TO_POSITIONS_S3 = "s3://llm-spark/multi_modal/commoncrawl/webdocs/line_dedup_domain_to_positions.json"

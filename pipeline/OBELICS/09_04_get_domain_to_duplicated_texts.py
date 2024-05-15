@@ -17,7 +17,7 @@ logger.setLevel(logging.INFO)
 
 
 NUM_SHARDS = 200
-NUM_SHARDS = 7
+NUM_SHARDS = 7 # @TODO : SRK Change when running with more data
 
 IDX_JOB = int(sys.argv[1])
 root_dir = os.getcwd()
