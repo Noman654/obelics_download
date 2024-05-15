@@ -4,7 +4,22 @@
 
 Note - Data gets exploded after each step
 ### Metadata Preparation Steps
-- Create datasets of 
+- In order to process the data parallely, we need to split the index data into multiple batches.
+- Each batch need to be stored as huggingface dataset in s3 location `s3://llm-spark/multi_modal/commoncrawl/webdocs/dataset/{batch_id}/ (this is a example location)`
+- Structure of the metadata should be as follows 
+```json
+{
+ 'url': 'https://www.herzindagi.com/hindi/advice/these-6-types-of-fashionable-footwear-will-damage-your-feet-ankles-and-knees-article-92503',
+ 'languages': 'hin,eng',
+ 'encoding': 'UTF-8',
+ 'warc_filename': 'crawl-data/CC-MAIN-2022-33/segments/1659882571538.36/warc/CC-MAIN-20220812014923-20220812044923-00734.warc.gz',
+ 'warc_record_offset': 691410160,
+ 'warc_record_length': 48078
+ }
+```
+- Fields `url`, `warc_record_offset`, `warc_record_length` and `warc_filename` are mandatory.
+
+### Data Extraction Steps
 
 ### Steps to run the OBELICS Pipeline
 
@@ -47,7 +62,7 @@ Note - Data gets exploded after each step
 5. Command for web filtering
    
    ```bash
-   python 05_filtering_web_docs.py {batch_id} --path_web_document_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" --path_save_web_document_dataset_filtered "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" --path_config_filter_web_documents "./obelics/configs/config_filter_web_documents.yaml" --path_common_words "/mnt/weka/shahrukh/workspace/OBELICS/models/common_words.json" --path_lang_id_model "/mnt/weka/shahrukh/workspace/OBELICS/models/lid.176.bin"  --path_sentencepiece_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.sp.model" --path_kenlm_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.arpa.bin" --num_proc 2
+   python 05_filtering_web_docs.py {batch_id} /--path_web_document_dataset   "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset/" / --path_save_web_document_dataset_filtered  "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_filtered/" / --path_config_filter_web_documents  "./obelics/configs/config_filter_web_documents.yaml" / --path_common_words "/mnt/weka/shahrukh/workspace/OBELICS/models/common_words.json" / --path_lang_id_model "/mnt/weka/shahrukh/workspace/OBELICS/models/lid.176.bin" /   --path_sentencepiece_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.sp.model" / --path_kenlm_model "/mnt/weka/shahrukh/workspace/OBELICS/models/en.arpa.bin" / --num_proc 2
    ```
    
    Different kind of filters applied are as follows
@@ -155,7 +170,7 @@ Note - Data gets exploded after each step
       12.2 Remove the images that are not authorized to be used for training
       ```bash
       python 12_02_remove_opt_out_images.py {batch_id}
-   ```
+      ```
 13. Final processing 
    - Remove end of the document token 
    - Merge documents where end of document token is consecutively available
