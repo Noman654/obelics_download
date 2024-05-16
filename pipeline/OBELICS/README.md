@@ -5,7 +5,9 @@
 - In most of the scripts s3 locations are hardcoded with prefix `s3://llm-spark/` as it was hardcoded in original pipeline
 - We are giving all the scripts that were used for the creation of OBELICS, with numbers indicating the chronology.
 
-Note - Data gets exploded after each step
+### Important Notes 
+- Data gets exploded after each step
+- In the metadata (Common Crawl index files) keys are not same, so we might have to modify some of the index files while preparing batches
 ## Metadata Preparation Steps
 
 - To enable parallel data processing, we must partition the CC index data into numerous batches. Each batch should be saved as a Hugging Face dataset in an S3 location such as `s3://llm-spark/multi_modal/commoncrawl/webdocs/dataset/{batch_id}/ (this is an illustrative location)`.
