@@ -1,7 +1,15 @@
+# Setup
+
+```
+conda create -n mm python=3.8 -y
+conda activate mm
+pip install -r requirements.txt
+```
+
 # Data Pipeline Inspired by OBELICS
 - The pipeline is initially adopted from the Hugging Face [OBELICS](https://github.com/huggingface/OBELICS/tree/main) pipeline.
 - Following each step, the data is stored in S3.
-- Change the bucket name and key in [warc_downloader](https://github.com/ola-silicon/multimodal-data/blob/f6fff5563a4934dd462bcb9a1ac1fe345ae08995/pipeline/OBELICS/obelics/processors/warc_downloader.py#L37-L38)
+- Change the bucket name and key in [warc_downloader](./obelics/processors/warc_downloader.py#L37-L38)
 - In most of the scripts s3 locations are hardcoded with prefix `s3://llm-spark/` as it was hardcoded in original pipeline
 - We are giving all the scripts that were used for the creation of OBELICS, with numbers indicating the chronology.
 
@@ -41,7 +49,7 @@
   
 2. Extract html page and get image urls
    - Execute bash command for [02_bis_extract_html_get_image_urls_new_rules.py](./02_bis_extract_html_get_image_urls_new_rules.py) with batch id and number of process. You also need to provide s3 location to store documents without images 
-   
+
    ```bash
    python 02_bis_extract_html_get_image_urls_new_rules.py {batch_id} --path_warc_dataset "s3://llm-spark/multi_modal/commoncrawl/webdocs/warc_dataset/" --path_save_dir_web_document_dataset_without_images "s3://llm-spark/multi_modal/commoncrawl/webdocs/web_document_dataset_without_images/"  --num_proc {processes}
    ```
