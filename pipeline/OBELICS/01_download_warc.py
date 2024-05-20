@@ -53,7 +53,7 @@ if __name__ == "__main__":
     path_save_tmp_files = f"{working_dir}/scratch/storage_hugo/"
     if os.path.exists(path_save_tmp_files):
         os.system(f"rm -r {path_save_tmp_files}")
-    os.system(f"mkdir {path_save_tmp_files}")
+    os.system(f"mkdir -p {path_save_tmp_files}")
 
     logger.info("Starting loading the metadata or previous warc dataset")
     path_sync_s3 = os.path.join(args.path_metadata_dataset, str(args.idx_job))

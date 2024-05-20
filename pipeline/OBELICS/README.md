@@ -4,6 +4,7 @@
 conda create -n mm python=3.8 -y
 conda activate mm
 pip install -r requirements.txt
+pip install datasets
 ```
 
 # Data Pipeline Inspired by OBELICS
@@ -12,6 +13,11 @@ pip install -r requirements.txt
 - Change the bucket name and key in [warc_downloader](./obelics/processors/warc_downloader.py#L37-L38)
 - In most of the scripts s3 locations are hardcoded with prefix `s3://llm-spark/` as it was hardcoded in original pipeline
 - We are giving all the scripts that were used for the creation of OBELICS, with numbers indicating the chronology.
+- To get a sample data, you could also check as `https://index.commoncrawl.org/CC-MAIN-2022-33-index?url=jansatta.com/*&output=json` can give 
+
+```
+{"urlkey": "com,jansatta)/", "timestamp": "20220812221348", "url": "https://www.jansatta.com:443/", "mime": "text/html", "mime-detected": "text/html", "status": "200", "digest": "3AOEAMQ5UUH5767NXWDI32EEWMAGPSR7", "warc_record_length": "55222", "warc_record_offset": "751633647", "warc_filename": "crawl-data/CC-MAIN-2022-33/segments/1659882571758.42/warc/CC-MAIN-20220812200804-20220812230804-00000.warc.gz", "languages": "hin,eng", "encoding": "UTF-8"}
+```
 
 ### Important Notes 
 - Data gets exploded after each step
