@@ -81,6 +81,7 @@ media = [
     "object",
     "picture",
     "video",
+    "imageIndex",
 ]
 
 # Tags including potential interesting attributes for the media,

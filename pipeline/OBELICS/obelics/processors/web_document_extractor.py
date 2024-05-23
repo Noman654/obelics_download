@@ -68,7 +68,10 @@ def html_to_web_documents(
         texts = []
         images = []
         metadata = []
+        print("################# Nodes are ################")
+        print(list_nodes)
         for node in list_nodes:
+            print(node.tag)
             if node.tag == "-text":
                 texts.append(node.text)
                 images.append("")

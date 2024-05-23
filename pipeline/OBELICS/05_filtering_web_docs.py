@@ -176,11 +176,12 @@ if __name__ == "__main__":
         path_kenlm_model=args.path_kenlm_model,
         perplexity_score_node_level_max_cutoff=filtering_params["perplexity_score_node_level_max_cutoff"],
     )
-
+    
     logger.info("Starting filtering the web document dataset at node level")
     web_document_dataset_filtered = web_document_dataset.map(web_document_filtering_node_level, num_proc=args.num_proc)
     logger.info("Finished filtering the web document dataset at node level")
-
+    
+    logger.info("########################## Document level Filtering Start #####################")
     web_document_filtering_doc_level = WebDocumentFilteringDocLevel(
         cond_check_number_images=filtering_params["cond_check_number_images"],
         number_images_min_cutoff=filtering_params["number_images_min_cutoff"],

@@ -57,7 +57,7 @@ if __name__ == "__main__":
     ]
 
     with open(f"{root_path}/scratch/tot_image_urls_in_web_document_dataset_filtered_too_duplicated.pickle", "wb") as f:
-        pickle.dump(tot_counter, f, pickle.HIGHEST_PROTOCOL)
+        pickle.dump(tot_image_urls_in_web_document_dataset_filtered_too_duplicated, f, pickle.HIGHEST_PROTOCOL)
 
     command_sync_s3 = (
         f"aws s3 cp {root_path}/scratch/tot_image_urls_in_web_document_dataset_filtered_too_duplicated.pickle"

@@ -78,7 +78,7 @@ class DOMTreeSimplificator:
             selectolax_tree = self._unnest_nodes(selectolax_tree)
         if self.remake_tree:
             selectolax_tree = self._remake_tree(selectolax_tree)
-
+        print(selectolax_tree.html)
         if type_return == "str":
             return selectolax_tree.html
         elif type_return == "selectolax_tree":
