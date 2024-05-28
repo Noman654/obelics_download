@@ -24,7 +24,7 @@ def extract_text_and_images_from_html(soup):
     for element in soup.recursiveChildGenerator():
         if element.name:
             if element.name == 'img':
-                img_data.append({"Image": {element['src']}, "Alt": {element.get('alt', 'No alt text')}})
+                img_data.append({"Image": {element['src']}, "Alt": {element.get('alt', None)}})
                 text_data.append(None)
             elif element.name in ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span']:
                 text = element.get_text(strip=True)
@@ -62,13 +62,11 @@ def extract_text_and_images(soup):
     for element in soup.recursiveChildGenerator():
         if element.name:
             if element.name == 'img':
-               # print(f"Image: {element['src']}, Alt: {element.get('alt', 'No alt text')}")
-                img_data.append({"Image": element['src'], "Alt": element.get('alt', 'No alt text')})
+                img_data.append({"Image": element['src'], "Alt": element.get('alt', None)})
                 text_data.append(None)
             elif element.name in ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'span']:
                 text = element.get_text(strip=True)
                 if text:  # Only print non-empty text
-                    #print(f"Text: {text}")
                     text_data.append(text)
                     img_data.append(None)
     return text_data, img_data
