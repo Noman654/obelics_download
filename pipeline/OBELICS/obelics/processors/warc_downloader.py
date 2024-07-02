@@ -34,8 +34,8 @@ class WarcDownloader:
         try:
             print(warc_filename)
             response = client.get_object(
-                Bucket="llm-spark",
-                Key=f"shahrukh/{warc_filename}",
+                Bucket="commoncrawl",
+                Key=f"{warc_filename}",
                 Range=f"bytes={warc_record_offset}-{warc_record_offset + warc_record_length - 1}",
             )
         except (ClientError, ProxyConnectionError) as e:
