@@ -5,7 +5,6 @@ from multiprocessing import cpu_count
 
 from obelics.processors import CommonCrawlWebDocumentExtractor
 
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -15,11 +14,12 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 root_path = os.getcwd()
+
 def get_args():
     parser = argparse.ArgumentParser(description="Download images and create a dataset containing them.")
     parser.add_argument(
         "idx_job",
-        type=int,
+        type=str,  # Parsing idx_job as string initially
         help="Index of the job (between 0 and 199).",
     )
     parser.add_argument(
@@ -97,14 +97,24 @@ def get_args():
         default="s3://llm-spark/multi_modal/commoncrawl/webdocs/map_url_idx_2/",
         help="The file to save the map to go from urls to indices of the dataset containing all images.",
     )
+
     args = parser.parse_args()
+
+    # Try to convert idx_job to an integer
+    try:
+        args.idx_job = int(args.idx_job)
+    except ValueError:
+        logger.error("idx_job must be a valid integer.")
+        parser.print_help()
+        exit(1)
+
     return args
 
 
 if __name__ == "__main__":
     args = get_args()
 
-    path_save_tmp_files = f"{root_path}/scratch/storage_hugo/"
+    path_save_tmp_files = f"{root_path}/scratch/storage_hugo_{str(args.idx_job)}/"
     if args.U == 0:
         if os.path.exists(path_save_tmp_files):
             os.system(f"rm -r {path_save_tmp_files}")
@@ -117,17 +127,17 @@ if __name__ == "__main__":
     os.system(f"mkdir -p {path_save_dir_tmp_datasets_images}")
 
     path_image_urls = os.path.join(args.path_image_urls, str(args.idx_job), "image_urls.txt")
-    path_disk_image_urls = f"{root_path}/scratch/storage_hugo/image_urls.txt"
+    path_disk_image_urls = f"{root_path}/scratch/storage_hugo_{str(args.idx_job)}/image_urls.txt"
     command_sync_s3 = f"aws s3 cp {path_image_urls} {path_disk_image_urls}"
     if args.U == 0:
         os.system(command_sync_s3)
         os.system(command_sync_s3)
 
     path_save_dir_dataset_images = os.path.join(args.path_save_dir_dataset_images, str(args.idx_job))
-    path_disk_save_dir_dataset_images = f"{root_path}/scratch/storage_hugo/image_dataset"
+    path_disk_save_dir_dataset_images = f"{root_path}/scratch/storage_hugo_{str(args.idx_job)}/image_dataset"
 
     path_save_file_map_url_idx = os.path.join(args.path_save_file_map_url_idx, str(args.idx_job), "map_url_idx.json")
-    path_disk_save_file_map_url_idx = f"{root_path}/scratch/storage_hugo/map_url_idx.json"
+    path_disk_save_file_map_url_idx = f"{root_path}/scratch/storage_hugo_{str(args.idx_job)}/map_url_idx.json"
 
     web_document_extractor = CommonCrawlWebDocumentExtractor(
         html_dataset=None,
@@ -160,6 +170,10 @@ if __name__ == "__main__":
             lines = file.readlines()
             num_tot_images = len(lines)
         num_successes = len(web_document_extractor.dataset_images)
+
+        with open(f'./logs/img{str(args.idx_job)}.log','w+') as f:
+            f.write(f"Success rate for downloading of the images: {num_successes} / {num_tot_images} ({num_successes / num_tot_images * 100}%)")
+        
         logger.info(
             f"Success rate for downloading of the images: {num_successes} /"
             f" {num_tot_images} ({num_successes / num_tot_images * 100}%)"

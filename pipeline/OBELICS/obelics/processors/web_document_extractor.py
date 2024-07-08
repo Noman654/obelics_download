@@ -11,6 +11,27 @@ from datasets import Dataset, Image, Sequence, Value, concatenate_datasets, load
 from pathos.multiprocessing import ProcessingPool as Pool
 from tqdm import tqdm
 
+URL_BAN_WORDS = ["logo", "button", "icon", "plugin", "widget", "porn", "xxx", "sex"]
+
+def get_filter_urls(path, write_path):
+
+    with open(path) as f:
+        data = f.readlines()
+
+    ban_found = False 
+    not_bannned = []
+    for url in data:
+        ban_found = False 
+        for ban in URL_BAN_WORDS:
+            if ban in url:
+                ban_found = True
+                print
+                break
+        if not ban_found:
+            not_bannned.append(url)
+    print(len(data), len(not_bannned))
+    with open(write_path, 'w+') as f:
+        f.writelines(not_bannned)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -122,9 +143,12 @@ def download_images(
     # https://github.com/rom1504/img2dataset#setting-up-a-bind9-resolver
     logger.info("Starting downloading the images")
     print(path_save_file_image_urls, path_save_dir_downloaded_images, num_proc, thread_count, number_sample_per_shard, image_size, resize_mode)
+    
+    write_file_path = path_save_file_image_urls.split('.')[0]+'1.txt'
+    get_filter_urls(path_save_file_image_urls, write_file_path)
     os.system(
         "img2dataset"
-        f" --url_list={path_save_file_image_urls} --output_folder={path_save_dir_downloaded_images}"
+        f" --url_list={write_file_path} --output_folder={path_save_dir_downloaded_images}"
         f" --processes_count={num_proc} --thread_count={thread_count}"
         f" --number_sample_per_shard={number_sample_per_shard} --image_size={image_size}"
         f" --resize_mode={resize_mode} --output_format=webdataset"
