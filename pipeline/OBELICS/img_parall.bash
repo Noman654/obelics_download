@@ -26,6 +26,7 @@ for BATCH in $(seq $1 $2); do
         echo "Batch exists: $BATCH"
         continue  # Skip to the next batch
     fi
+    mkdir -p ./logs
     LOG_FILE="./logs/log_batch_img_${BATCH}.log"
     touch $LOG_FILE
     echo "Processing batch $BATCH ..." | tee -a $LOG_FILE

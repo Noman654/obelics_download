@@ -22,7 +22,7 @@ screen -dmS "$main_screen_name"
 
 run_in_screen_window() {
     local start_id=$1
-    local end_id=$((start_id + 8))
+    local end_id=$((start_id + 50))
     local window_name="batch_$start_id"
     sleep $((RANDOM % 5 + 5))
     echo "-S $main_screen_name -X screen -t $window_name bash -c ./img_parall.bash $start_id $end_id; exec bash"
