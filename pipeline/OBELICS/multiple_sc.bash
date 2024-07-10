@@ -10,14 +10,16 @@ batch_number=$1
 starting_image_id=$2
 
 # Ensure conda is initialized
-eval "$(conda shell.bash hook)"
-conda activate mm
+# eval "$(conda shell.bash hook)"
+# conda activate mm
 
 # Create a main screen session
-main_screen_name="image_download01"
+main_screen_name="image_download02"
 screen -dmS "$main_screen_name"
 
 # Function to run img_download.bash in a new screen window within the main screen session
+
+
 run_in_screen_window() {
     local start_id=$1
     local end_id=$((start_id + 8))

@@ -3,7 +3,6 @@
 
 
 
-conda activate mm
 # Check if correct number of arguments are provided
 if [ "$#" -ne 2 ]; then
     echo "Usage: $0 <start_batch> <end_batch>"
@@ -11,9 +10,22 @@ if [ "$#" -ne 2 ]; then
 fi
 
 
+# Ensure conda is initialized
+source /home/ubuntu/miniconda/etc/profile.d/conda.sh
+conda activate mm
+
+echo "check its running or not "
+
+BUCKET_PATH="s3://llm-spark/multi_modal/commoncrawl/webdocs/image_dataset"
 # Loop over batches from start to end
 for BATCH in $(seq $1 $2); do
-    # Initialize logging
+    # Initialize logging   
+
+    BATCH_PATH="$BUCKET_PATH/$BATCH/"
+    if aws s3 ls "$BATCH_PATH" > /dev/null 2>&1; then
+        echo "Batch exists: $BATCH"
+        continue  # Skip to the next batch
+    fi
     LOG_FILE="./logs/log_batch_img_${BATCH}.log"
     touch $LOG_FILE
     echo "Processing batch $BATCH ..." | tee -a $LOG_FILE
