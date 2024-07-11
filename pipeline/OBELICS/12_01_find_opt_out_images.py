@@ -20,7 +20,6 @@ PATH_SAVE_S3_OPT_OUT = "s3://llm-spark/multi_modal/commoncrawl/webdocs/ds_opt_ou
 MAX_NUM_RETRIES_SYNC = 3
 
 #TOKEN = os.environ["SPAWNING_TOKEN"]
-TOKEN = "a1f459c6-11e1-43a0-b7e1-3fdc52509365"
 
 BATCH_SIZE = 100_000
 
